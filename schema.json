@@ -1,0 +1,91 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Companion plugin registry",
+  "description": "One entry per plugin listed on the /plugins page of companion-lab.github.io. The registry scripts (scripts/validate.mjs and friends) enforce this schema; editors use it for completions via plugins.json's $schema field.",
+  "type": "object",
+  "required": ["plugins"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "plugins": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/plugin"
+      }
+    }
+  },
+  "definitions": {
+    "plugin": {
+      "type": "object",
+      "required": [
+        "id",
+        "repo",
+        "name",
+        "version",
+        "description",
+        "icon",
+        "color",
+        "permissions",
+        "frontend",
+        "backend"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "description": "The plugin's manifest.json id (what the app knows it by). Lowercase letters, digits, and dashes.",
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "maxLength": 64
+        },
+        "repo": {
+          "description": "Full GitHub slug (owner/name) hosting the plugin's source and releases. Any public GitHub repo works, not just companion-lab's.",
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*/[A-Za-z0-9][A-Za-z0-9_.-]*$"
+        },
+        "name": {
+          "description": "Display name shown on the plugin card.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "version": {
+          "description": "Latest published release version (the v-prefixed git tag, without the v). Kept fresh automatically by the daily version sync.",
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(-[0-9A-Za-z.-]+)?$"
+        },
+        "description": {
+          "description": "One-to-three sentence card description: what the plugin adds to Companion.",
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 400
+        },
+        "icon": {
+          "description": "FontAwesome solid icon name rendered on the card badge (e.g. fa-comments).",
+          "type": "string",
+          "pattern": "^fa-[a-z0-9-]+$"
+        },
+        "color": {
+          "description": "Theme color key for the card icon. The page's palette knows these four.",
+          "enum": ["purple", "blue", "indigo", "pink"]
+        },
+        "permissions": {
+          "description": "The manifest's declared permission list, shown as chips and filterable on the page. New permissions appear as filter chips automatically.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z-]*$"
+          },
+          "uniqueItems": true
+        },
+        "frontend": {
+          "description": "Whether the manifest declares a frontend.entry (bundled React UI)."
+        },
+        "backend": {
+          "description": "Whether the manifest declares a backend.library (Rust dylib). Backend plugins ship one zip per platform."
+        }
+      }
+    }
+  }
+}

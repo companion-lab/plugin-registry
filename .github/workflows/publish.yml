@@ -1,0 +1,95 @@
+# Runs on every merge to main (and daily) and is the registration moment:
+# versions are refreshed from GitHub releases, PLUGINS.md regenerated, the
+# result committed, and the landing page dispatched to rebuild its embedded
+# catalog immediately. The landing page's own daily rebuild is the fallback
+# whenever this dispatch is skipped (no token) or missed.
+name: Publish
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "plugins.json"
+      - "scripts/**"
+      - "PLUGINS.md"
+      - ".github/workflows/publish.yml"
+  schedule:
+    # Daily version refresh — same slot the landing page's old cron used, so
+    # release-driven version bumps reach the site within a day even when no
+    # registry PR merged.
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  # contents: write lets this job push the synced catalog back to main.
+  contents: write
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Sync plugin versions from GitHub releases
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/sync-versions.mjs
+
+      - name: Regenerate PLUGINS.md
+        run: node scripts/generate.mjs
+
+      # Redundant with validate.yml on PRs, but publish also rewrites the
+      # files itself — never push a broken normalization.
+      - name: Validate
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/validate.mjs
+
+      - name: Commit synced registry
+        id: commit
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "registry unchanged"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add -A
+            git commit -m "[skip ci] chore: sync registry from GitHub releases"
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # The landing page rebuilds immediately on this dispatch. Skipped when
+      # nothing changed on a scheduled run (the site embeds the same JSON) or
+      # when REGISTRY_SYNC_TOKEN is absent — the daily fallback covers both.
+      # See README.md → Maintainer setup for the one-time token.
+      - name: Dispatch the landing page rebuild
+        if: >-
+          github.event_name != 'schedule' ||
+          steps.commit.outputs.changed == 'true'
+        env:
+          REGISTRY_SYNC_TOKEN: ${{ secrets.REGISTRY_SYNC_TOKEN }}
+        run: |
+          if [ -z "$REGISTRY_SYNC_TOKEN" ]; then
+            echo "::warning::REGISTRY_SYNC_TOKEN is not set — skipping the landing-page dispatch. The site picks this up on its next daily rebuild."
+            exit 0
+          fi
+          status=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $REGISTRY_SYNC_TOKEN" \
+            https://api.github.com/repos/companion-lab/companion-lab.github.io/dispatches \
+            -d '{"event_type":"plugin-registry-updated","client_payload":{"source":"plugin-registry","ref":"main"}}')
+          if [ "$status" != "204" ]; then
+            echo "::warning::dispatch returned HTTP $status — the landing page syncs on its next daily rebuild instead. (401/403: expired token; 404: wrong repo or missing token scope.)"
+            exit 0
+          fi
+          echo "dispatched plugin-registry-updated to companion-lab/companion-lab.github.io"
