@@ -14,7 +14,8 @@ picks it up automatically.
 PR edits plugins.json ──► validate.yml (schema + generated-files check)
         │
         ▼ merge to main
-publish.yml: sync versions → regenerate PLUGINS.md → commit [skip ci]
+publish.yml: resolve release versions (versions.json) → regenerate
+PLUGINS.md → commit [skip ci]
         │
         ├─► repository_dispatch → companion-lab.github.io rebuilds the
         │   /plugins catalog immediately (needs REGISTRY_SYNC_TOKEN)
@@ -24,9 +25,10 @@ publish.yml: sync versions → regenerate PLUGINS.md → commit [skip ci]
 ```
 
 The landing page embeds the catalog at build time
-(`companion-landing-page/scripts/sync-registry.mjs` regenerates
-`src/plugin_catalog.rs` from this repo's `plugins.json`), so no runtime
-registry server exists — same static-pages constraint as before the registry.
+(`companion-landing-page/scripts/sync-registry.mjs` merges this repo's
+`plugins.json` + `versions.json` and regenerates `src/plugin_catalog.rs`),
+so no runtime registry server exists — same static-pages constraint as
+before the registry.
 
 ## Entry format
 
@@ -39,7 +41,6 @@ via the `$schema` field). The fields:
 | `id`           | The plugin's `manifest.json` id (lowercase letters, digits, dashes)        |
 | `repo`         | Full GitHub slug `owner/name` — any public repo, not just companion-lab's  |
 | `name`         | Display name on the plugin card                                            |
-| `version`      | Latest published release (the `v`-tagged one, without the `v`); the daily sync keeps it fresh |
 | `description`  | 10–400 chars shown on the card                                             |
 | `icon`         | FontAwesome solid icon name, e.g. `fa-comments`                           |
 | `color`        | Theme key: `purple`, `blue`, `indigo`, or `pink`                           |
@@ -47,8 +48,14 @@ via the `$schema` field). The fields:
 | `frontend`     | Whether the manifest declares `frontend.entry` (bundled React UI)          |
 | `backend`      | Whether the manifest declares `backend.library` (Rust dylib)               |
 
+**There is no version field.** Each repo's latest published release (the
+`v`-tagged one, pre-releases excluded) is resolved automatically into
+[`versions.json`](versions.json) — generated, never hand-edited — on every
+merge and daily. A plugin with no releases yet simply has no entry and shows
+as "unreleased" until its first release lands.
+
 Formatting: 2-space indent, trailing newline — `scripts/validate.mjs` enforces
-it (`node scripts/sync-versions.mjs` normalizes a hand-edited file).
+it (`node scripts/validate.mjs --fix` normalizes a hand-edited file).
 
 ## Scripts
 
@@ -56,9 +63,9 @@ All zero-dependency (`node >= 20`):
 
 | Script                       | Purpose                                                        |
 | ---------------------------- | -------------------------------------------------------------- |
-| `scripts/validate.mjs`       | Schema + uniqueness + formatting checks; advisory release lookups |
-| `scripts/generate.mjs`       | `plugins.json` → `PLUGINS.md` (`--check` for CI freshness gates) |
-| `scripts/sync-versions.mjs`  | Pull each repo's latest release into `plugins.json` (daily)    |
+| `scripts/validate.mjs`       | Schema + uniqueness + formatting checks (`--fix` normalizes); advisory release lookups |
+| `scripts/generate.mjs`       | `plugins.json` + `versions.json` → `PLUGINS.md` (`--check` for CI freshness gates) |
+| `scripts/sync-versions.mjs`  | Resolve each repo's latest GitHub release into `versions.json` (merge + daily) |
 
 ## Maintainer setup (one-time)
 

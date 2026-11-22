@@ -10,6 +10,7 @@ on:
     branches: [main]
     paths:
       - "plugins.json"
+      - "versions.json"
       - "scripts/**"
       - "PLUGINS.md"
       - ".github/workflows/publish.yml"
@@ -38,7 +39,7 @@ jobs:
         with:
           node-version: 22
 
-      - name: Sync plugin versions from GitHub releases
+      - name: Resolve plugin versions from GitHub releases
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: node scripts/sync-versions.mjs

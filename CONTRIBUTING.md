@@ -7,8 +7,9 @@ Thanks for registering your plugin! The whole flow is one JSON entry.
 Your plugin repo (any public GitHub account works) must publish installable
 releases the Companion app can import:
 
-1. **Releases are tagged** `v<version>` (e.g. `v1.2.0`) and the entry's
-   `version` field is that latest release.
+1. **Releases are tagged** `v<version>` (e.g. `v1.2.0`) — the version chip on
+   your card resolves automatically from the latest release; you never
+   declare it anywhere.
 2. **Release zips follow the naming convention** the app and the site both
    rely on:
    - backend plugins: one zip per platform —
@@ -28,9 +29,11 @@ releases the Companion app can import:
    entry as the template. Field contract: [`schema.json`](schema.json) (your
    editor will autocomplete it via the `$schema` field) and the
    [README table](README.md#entry-format).
-   - Keep the file formatting: 2-space indent, trailing newline.
+   - Keep the file formatting: 2-space indent, trailing newline
+     (`node scripts/validate.mjs --fix` normalizes it for you).
    - `repo` is the full `owner/name` slug; `id` is the manifest id (it does
      not have to equal the repo name).
+   - No version field — versions resolve from your GitHub releases.
 3. Regenerate the markdown:
 
    ```sh
@@ -55,9 +58,9 @@ releases the Companion app can import:
 
 ## After merge
 
-`publish.yml` runs automatically: it refreshes `version` fields from your
-releases daily from then on, regenerates `PLUGINS.md`, and dispatches the
-landing page, which rebuilds with your plugin on
+`publish.yml` runs automatically: it resolves your repo's latest release into
+`versions.json` (refreshed daily from then on), regenerates `PLUGINS.md`, and
+dispatches the landing page, which rebuilds with your plugin on
 [/plugins](https://companion-lab.github.io/plugins) within minutes (at most a
 day if the dispatch token is unavailable).
 
