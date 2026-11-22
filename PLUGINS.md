@@ -2,7 +2,7 @@
 
 # Companion plugin registry
 
-8 plugins · source of truth: [`plugins.json`](plugins.json) (schema: [`schema.json`](schema.json)) · to add yours, see [CONTRIBUTING.md](CONTRIBUTING.md).
+8 plugins · source of truth: [`plugins.json`](plugins.json) (schema: [`schema.json`](schema.json)) · versions resolve automatically from each repo's GitHub releases · to add yours, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Registered plugins are listed on the [Companion plugins page](https://companion-lab.github.io/plugins) automatically after a PR merges to `main`.
 
@@ -10,14 +10,14 @@ Registered plugins are listed on the [Companion plugins page](https://companion-
 
 | Plugin | Version | Permissions | Kind | Repository |
 | ------ | ------- | ----------- | ---- | ---------- |
-| [Chat](https://github.com/companion-lab/companion-plugin-chat) | 0.3.2 | `storage` `events` `tools` `secrets` | frontend only | companion-lab/companion-plugin-chat |
-| [VRM Avatar](https://github.com/companion-lab/companion-plugin-vrm) | 0.3.2 | `storage` `events` | frontend + rust backend | companion-lab/companion-plugin-vrm |
-| [Live2D Avatar](https://github.com/companion-lab/companion-plugin-l2d) | 0.3.2 | `storage` `events` `tools` | frontend + rust backend | companion-lab/companion-plugin-l2d |
-| [Speech Recognition](https://github.com/companion-lab/companion-plugin-stt) | 0.3.2 | `events` `secrets` `microphone` | frontend + rust backend | companion-lab/companion-plugin-stt |
-| [Speech Synthesis](https://github.com/companion-lab/companion-plugin-tts) | 0.3.3 | `events` `secrets` | frontend + rust backend | companion-lab/companion-plugin-tts |
-| [Alarms](https://github.com/companion-lab/companion-plugin-alarms) | 0.3.2 | `storage` `events` `tools` | frontend + rust backend | companion-lab/companion-plugin-alarms |
-| [Calendar](https://github.com/companion-lab/companion-plugin-calendar) | 0.3.2 | `storage` `events` `tools` | frontend + rust backend | companion-lab/companion-plugin-calendar |
-| [MCP Tools](https://github.com/companion-lab/companion-plugin-mcp) | 0.3.2 | `storage` `events` `tools` | frontend + rust backend | companion-lab/companion-plugin-mcp |
+| [Chat](https://github.com/companion-lab/companion-plugin-chat) | v0.3.2 | `storage` `events` `tools` `secrets` | frontend only | companion-lab/companion-plugin-chat |
+| [VRM Avatar](https://github.com/companion-lab/companion-plugin-vrm) | v0.3.2 | `storage` `events` | frontend + rust backend | companion-lab/companion-plugin-vrm |
+| [Live2D Avatar](https://github.com/companion-lab/companion-plugin-l2d) | v0.3.2 | `storage` `events` `tools` | frontend + rust backend | companion-lab/companion-plugin-l2d |
+| [Speech Recognition](https://github.com/companion-lab/companion-plugin-stt) | v0.3.2 | `events` `secrets` `microphone` | frontend + rust backend | companion-lab/companion-plugin-stt |
+| [Speech Synthesis](https://github.com/companion-lab/companion-plugin-tts) | v0.3.3 | `events` `secrets` | frontend + rust backend | companion-lab/companion-plugin-tts |
+| [Alarms](https://github.com/companion-lab/companion-plugin-alarms) | v0.3.2 | `storage` `events` `tools` | frontend + rust backend | companion-lab/companion-plugin-alarms |
+| [Calendar](https://github.com/companion-lab/companion-plugin-calendar) | v0.3.2 | `storage` `events` `tools` | frontend + rust backend | companion-lab/companion-plugin-calendar |
+| [MCP Tools](https://github.com/companion-lab/companion-plugin-mcp) | v0.3.2 | `storage` `events` `tools` | frontend + rust backend | companion-lab/companion-plugin-mcp |
 
 ## Details
 

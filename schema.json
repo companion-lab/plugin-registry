@@ -23,7 +23,6 @@
         "id",
         "repo",
         "name",
-        "version",
         "description",
         "icon",
         "color",
@@ -40,7 +39,7 @@
           "maxLength": 64
         },
         "repo": {
-          "description": "Full GitHub slug (owner/name) hosting the plugin's source and releases. Any public GitHub repo works, not just companion-lab's.",
+          "description": "Full GitHub slug (owner/name) hosting the plugin's source and releases. Any public GitHub repo works, not just companion-lab's. The latest published release (v-tagged, excluding pre-releases) is resolved automatically into versions.json — entries never carry a version field.",
           "type": "string",
           "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*/[A-Za-z0-9][A-Za-z0-9_.-]*$"
         },
@@ -49,11 +48,6 @@
           "type": "string",
           "minLength": 1,
           "maxLength": 64
-        },
-        "version": {
-          "description": "Latest published release version (the v-prefixed git tag, without the v). Kept fresh automatically by the daily version sync.",
-          "type": "string",
-          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(-[0-9A-Za-z.-]+)?$"
         },
         "description": {
           "description": "One-to-three sentence card description: what the plugin adds to Companion.",

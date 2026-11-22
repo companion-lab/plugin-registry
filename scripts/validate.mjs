@@ -2,7 +2,7 @@
 // Validate plugins.json against schema.json (plus registry-wide rules the
 // schema cannot express).
 //
-//   node scripts/validate.mjs
+//   node scripts/validate.mjs [--fix]
 //
 // Zero-dependency, like the other registry scripts: instead of pulling in an
 // ajv-style library, it implements exactly the JSON Schema keywords this
@@ -12,20 +12,24 @@
 //
 // Checks, in order:
 // 1. plugins.json parses and is byte-for-byte normalized (2-space indent,
-//    trailing newline) — keeps PRs diff-clean and the daily sync commit
-//    format-stable.
+//    trailing newline) — keeps PRs diff-clean. `--fix` rewrites the file
+//    normalized instead of failing (the only sanctioned way to format it;
+//    the sync jobs never touch plugins.json).
 // 2. Schema conformance (including "no unknown fields", so typos like
-//    `permission` instead of `permissions` fail loudly).
+//    `permission` instead of `permissions`, or a hand-added `version` field,
+//    fail loudly).
 // 3. Registry-wide rules: ids and repos unique.
-// 4. Advisory, never failing: each repo's releases/latest is fetched and
-//    compared to the declared version. Lookup failures (rate limit, private
-//    repo, release in flight) print a warning and pass — the daily version
-//    sync is the authoritative fixer, not the PR gate.
+// 4. Advisory, never failing: each repo's releases/latest is fetched so the
+//    PR check surfaces "no releases yet" cases. Lookup failures (rate limit,
+//    private repo, release in flight) print a warning and pass — the daily
+//    sync-versions job is the authoritative resolver, not the PR gate.
 
-import { readFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 
 const REGISTRY_PATH = "plugins.json";
 const SCHEMA_PATH = "schema.json";
+
+const fix = process.argv.includes("--fix");
 
 // ── Minimal JSON Schema validator (keywords listed in the header) ────────
 
@@ -160,8 +164,7 @@ async function latestReleaseVersion(repo) {
 
 async function checkReleases(plugins) {
   // SYNC_PLUGIN_FIXTURE=<path to {"repo": "version", …} JSON> replaces the
-  // GitHub lookups — used to test this path offline (same hook as the
-  // landing page's old sync script).
+  // GitHub lookups — used to test this path offline.
   const fixturePath = process.env.SYNC_PLUGIN_FIXTURE;
   const fixture = fixturePath ? JSON.parse(readFileSync(fixturePath, "utf8")) : null;
 
@@ -170,24 +173,24 @@ async function checkReleases(plugins) {
       ? (fixture[plugin.repo] ?? null)
       : await latestReleaseVersion(plugin.repo);
     if (published === null) {
-      console.warn(`warn: ${plugin.repo}: could not confirm a release — skipping`);
-      continue;
-    }
-    if (published !== plugin.version) {
       console.warn(
-        `warn: ${plugin.repo}: declared version ${plugin.version} != published release ${published}` +
-          " (syncs automatically after merge — fix the version field only if this is a new entry)",
+        `warn: ${plugin.repo}: no published release found — the catalog chip shows "unreleased" until the first release lands`,
       );
     }
   }
 }
 
 async function main() {
-  const raw = readFileSync(REGISTRY_PATH, "utf8");
+  let raw = readFileSync(REGISTRY_PATH, "utf8");
   const schema = JSON.parse(readFileSync(SCHEMA_PATH, "utf8"));
   const registry = JSON.parse(raw);
 
   let errors = checkFormatting(raw);
+  if (errors.length > 0 && fix) {
+    writeFileSync(REGISTRY_PATH, `${JSON.stringify(registry, null, 2)}\n`);
+    console.log("normalized plugins.json formatting");
+    errors = [];
+  }
   validate(registry, schema, schema, "plugins.json", errors);
 
   const plugins = registry.plugins ?? [];
