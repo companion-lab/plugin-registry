@@ -10,18 +10,18 @@ Registered plugins are listed on the [Companion plugins page](https://companion-
 
 | Plugin | Version | Permissions | Kind | Repository |
 | ------ | ------- | ----------- | ---- | ---------- |
-| [Chat](https://github.com/companion-lab/companion-plugin-chat) | v0.3.2 | `storage` `events` `tools` `secrets` | frontend only | companion-lab/companion-plugin-chat |
-| [VRM Avatar](https://github.com/companion-lab/companion-plugin-vrm) | v0.3.2 | `storage` `events` | frontend + rust backend | companion-lab/companion-plugin-vrm |
-| [Live2D Avatar](https://github.com/companion-lab/companion-plugin-l2d) | v0.3.2 | `storage` `events` `tools` | frontend + rust backend | companion-lab/companion-plugin-l2d |
-| [Speech Recognition](https://github.com/companion-lab/companion-plugin-stt) | v0.3.2 | `events` `secrets` `microphone` | frontend + rust backend | companion-lab/companion-plugin-stt |
-| [Speech Synthesis](https://github.com/companion-lab/companion-plugin-tts) | v0.3.3 | `events` `secrets` | frontend + rust backend | companion-lab/companion-plugin-tts |
-| [Alarms](https://github.com/companion-lab/companion-plugin-alarms) | v0.3.2 | `storage` `events` `tools` | frontend + rust backend | companion-lab/companion-plugin-alarms |
-| [Calendar](https://github.com/companion-lab/companion-plugin-calendar) | v0.3.2 | `storage` `events` `tools` | frontend + rust backend | companion-lab/companion-plugin-calendar |
-| [MCP Tools](https://github.com/companion-lab/companion-plugin-mcp) | v0.3.2 | `storage` `events` `tools` | frontend + rust backend | companion-lab/companion-plugin-mcp |
+| [Chat](https://github.com/companion-lab/companion-plugin-chat) | v0.4.1 | `storage` `events` `tools` `secrets` | frontend only | companion-lab/companion-plugin-chat |
+| [VRM Avatar](https://github.com/companion-lab/companion-plugin-vrm) | v0.4.1 | `storage` `events` | frontend + rust backend | companion-lab/companion-plugin-vrm |
+| [Live2D Avatar](https://github.com/companion-lab/companion-plugin-l2d) | v0.4.1 | `storage` `events` `tools` | frontend + rust backend | companion-lab/companion-plugin-l2d |
+| [Speech Recognition](https://github.com/companion-lab/companion-plugin-stt) | v0.4.1 | `events` `secrets` `microphone` | frontend + rust backend | companion-lab/companion-plugin-stt |
+| [Speech Synthesis](https://github.com/companion-lab/companion-plugin-tts) | v0.4.1 | `events` `secrets` | frontend + rust backend | companion-lab/companion-plugin-tts |
+| [Alarms](https://github.com/companion-lab/companion-plugin-alarms) | v0.4.1 | `storage` `events` `tools` | frontend + rust backend | companion-lab/companion-plugin-alarms |
+| [Calendar](https://github.com/companion-lab/companion-plugin-calendar) | v0.4.1 | `storage` `events` `tools` | frontend + rust backend | companion-lab/companion-plugin-calendar |
+| [MCP Tools](https://github.com/companion-lab/companion-plugin-mcp) | v0.4.1 | `storage` `events` `tools` | frontend + rust backend | companion-lab/companion-plugin-mcp |
 
 ## Details
 
-### Chat — `chat` v0.3.2
+### Chat — `chat` v0.4.1
 
 The avatar's AI conversation: provider chat with tool loop, streaming TTS/STT speech, wake word, clarifying questions, and the Persona/Connection settings sections.
 
@@ -30,7 +30,7 @@ The avatar's AI conversation: provider chat with tool loop, streaming TTS/STT sp
 - Entry points: frontend only
 - Releases: [companion-lab/companion-plugin-chat/releases](https://github.com/companion-lab/companion-plugin-chat/releases) — installable zips `chat-<version>[-<platform>].zip`
 
-### VRM Avatar — `vrm` v0.3.2
+### VRM Avatar — `vrm` v0.4.1
 
 VRM avatar models (with the built-in demo asset), motion and emotion clips, and graphics settings.
 
@@ -39,7 +39,7 @@ VRM avatar models (with the built-in demo asset), motion and emotion clips, and 
 - Entry points: frontend + rust backend
 - Releases: [companion-lab/companion-plugin-vrm/releases](https://github.com/companion-lab/companion-plugin-vrm/releases) — installable zips `vrm-<version>[-<platform>].zip`
 
-### Live2D Avatar — `companion-plugin-l2d` v0.3.2
+### Live2D Avatar — `companion-plugin-l2d` v0.4.1
 
 Live2D avatar for the desktop overlay: renders the bundled Cubism model and answers the avatar bus (chat emotions, TTS lip sync, click-through).
 
@@ -48,7 +48,7 @@ Live2D avatar for the desktop overlay: renders the bundled Cubism model and answ
 - Entry points: frontend + rust backend
 - Releases: [companion-lab/companion-plugin-l2d/releases](https://github.com/companion-lab/companion-plugin-l2d/releases) — installable zips `companion-plugin-l2d-<version>[-<platform>].zip`
 
-### Speech Recognition — `stt` v0.3.2
+### Speech Recognition — `stt` v0.4.1
 
 On-device STT (Moonshine) + cloud transcription, with a Speech Recognition settings tab and the cloud STT endpoint card.
 
@@ -57,7 +57,7 @@ On-device STT (Moonshine) + cloud transcription, with a Speech Recognition setti
 - Entry points: frontend + rust backend
 - Releases: [companion-lab/companion-plugin-stt/releases](https://github.com/companion-lab/companion-plugin-stt/releases) — installable zips `stt-<version>[-<platform>].zip`
 
-### Speech Synthesis — `tts` v0.3.3
+### Speech Synthesis — `tts` v0.4.1
 
 On-device TTS (Supertonic) + cloud synthesis, with a Speech Synthesis settings tab and the cloud TTS endpoint card.
 
@@ -66,7 +66,7 @@ On-device TTS (Supertonic) + cloud synthesis, with a Speech Synthesis settings t
 - Entry points: frontend + rust backend
 - Releases: [companion-lab/companion-plugin-tts/releases](https://github.com/companion-lab/companion-plugin-tts/releases) — installable zips `tts-<version>[-<platform>].zip`
 
-### Alarms — `alarms` v0.3.2
+### Alarms — `alarms` v0.4.1
 
 Timed alarms and reminders: a settings tab, the ringing banner, and alarm tools the avatar can call.
 
@@ -75,7 +75,7 @@ Timed alarms and reminders: a settings tab, the ringing banner, and alarm tools 
 - Entry points: frontend + rust backend
 - Releases: [companion-lab/companion-plugin-alarms/releases](https://github.com/companion-lab/companion-plugin-alarms/releases) — installable zips `alarms-<version>[-<platform>].zip`
 
-### Calendar — `calendar` v0.3.2
+### Calendar — `calendar` v0.4.1
 
 Dated events, birthdays, and appointments: a settings tab, reminder banners, and calendar tools the avatar can call.
 
@@ -84,7 +84,7 @@ Dated events, birthdays, and appointments: a settings tab, reminder banners, and
 - Entry points: frontend + rust backend
 - Releases: [companion-lab/companion-plugin-calendar/releases](https://github.com/companion-lab/companion-plugin-calendar/releases) — installable zips `calendar-<version>[-<platform>].zip`
 
-### MCP Tools — `mcp` v0.3.2
+### MCP Tools — `mcp` v0.4.1
 
 Model Context Protocol client: connect MCP servers and expose their tools to the avatar.
 
